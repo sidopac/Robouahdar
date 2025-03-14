@@ -14,3 +14,7 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd ArabicChatbot && python app.py"
+
+[deployment]
+run = ["sh", "-c", "cd ArabicChatbot && python app.py"]
+build = ["sh", "-c", "pip install -r requirements.txt"]
