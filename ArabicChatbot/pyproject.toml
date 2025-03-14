@@ -1,0 +1,12 @@
+[project]
+name = "repl-nix-workspace"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "arabic-reshaper>=3.0.0",
+    "firebase-admin>=6.7.0",
+    "flask>=3.1.0",
+    "nltk>=3.9.1",
+    "python-bidi>=0.6.6",
+]

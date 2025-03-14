@@ -1,0 +1,573 @@
+:root {
+    --primary-color: #128c7e;
+    --secondary-color: #25d366;
+    --accent-color: #075e54;
+    --light-color: #dcf8c6;
+    --dark-color: #333;
+    --text-color: #444;
+    --bot-message-bg: #fff;
+    --user-message-bg: #e1ffc7;
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+    
+    /* شخصيات البوت */
+    --personality-fun: #25d366;
+    --personality-serious: #34b7f1;
+    --personality-sarcastic: #9c59b6;
+    --personality-wise: #f1c40f;
+    --personality-angry: #e74c3c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+}
+
+.chat-container {
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 100px);
+    overflow: hidden;
+    position: relative;
+}
+
+.chat-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+    position: relative;
+}
+
+.chat-header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.chat-header .subtitle {
+    font-size: 1rem;
+    opacity: 0.8;
+    font-weight: normal;
+}
+
+.chat-header p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* زر الإعدادات */
+.settings-toggle {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform var(--transition-speed);
+}
+
+.settings-toggle:hover {
+    transform: rotate(30deg);
+}
+
+/* لوحة الإعدادات */
+.settings-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    z-index: 10;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    transition: all var(--transition-speed);
+    max-height: 90%;
+    overflow-y: auto;
+}
+
+.settings-panel.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.settings-panel h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.settings-section {
+    margin-bottom: 20px;
+}
+
+.settings-section h4 {
+    margin-bottom: 10px;
+    color: var(--dark-color);
+}
+
+.settings-footer {
+    text-align: left;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.close-settings {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.close-settings:hover {
+    background-color: var(--accent-color);
+}
+
+/* قسم تحديد الشخصيات */
+.personalities-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.personality-option {
+    background-color: #f5f5f5;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all var(--transition-speed);
+}
+
+.personality-option:hover {
+    background-color: #eaeaea;
+}
+
+.personality-option.active {
+    border-color: var(--primary-color);
+    background-color: #f0f8ff;
+}
+
+.personality-emoji {
+    font-size: 1.5rem;
+    margin-left: 8px;
+}
+
+.personality-name {
+    font-weight: 600;
+}
+
+/* عرض الشخصية الحالية في التذييل */
+.current-personality {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 3px 8px;
+    border-radius: 15px;
+    margin-top: 5px;
+    font-size: 0.8rem;
+}
+
+#current-personality-emoji {
+    font-size: 1.2rem;
+    margin-right: 5px;
+}
+
+/* قسم سياق المحادثة */
+.chat-context {
+    background-color: rgba(0, 0, 0, 0.03);
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    color: #666;
+    border-top: 1px solid #eee;
+    max-height: 60px;
+    overflow-y: auto;
+    transition: max-height var(--transition-speed);
+}
+
+.chat-context.hidden {
+    max-height: 0;
+    padding: 0 15px;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.context-item {
+    display: inline-block;
+    background-color: #f1f1f1;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-image: url('https://web.whatsapp.com/img/bg-chat-tile_9e8a2898faedb7db9bf5638405cf81ae.png');
+    background-color: #e5ddd5;
+    background-size: 200px;
+}
+
+.message {
+    margin-bottom: 15px;
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    position: relative;
+    line-height: 1.5;
+    word-wrap: break-word;
+    clear: both;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.message::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    top: 10px;
+}
+
+.bot-message {
+    background-color: var(--bot-message-bg);
+    color: var(--text-color);
+    float: right;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: 0;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.bot-message::after {
+    border-left-color: var(--bot-message-bg);
+    right: -18px;
+    border-right: 0;
+}
+
+/* أنماط لرسائل البوت بالشخصيات المختلفة */
+.bot-message.fun {
+    border-right: 3px solid var(--personality-fun);
+}
+
+.bot-message.serious {
+    border-right: 3px solid var(--personality-serious);
+}
+
+.bot-message.sarcastic {
+    border-right: 3px solid var(--personality-sarcastic);
+}
+
+.bot-message.wise {
+    border-right: 3px solid var(--personality-wise);
+}
+
+.bot-message.angry {
+    border-right: 3px solid var(--personality-angry);
+}
+
+.user-message {
+    background-color: var(--user-message-bg);
+    color: var(--text-color);
+    float: left;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: var(--border-radius);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.user-message::after {
+    border-right-color: var(--user-message-bg);
+    left: -18px;
+    border-left: 0;
+}
+
+.system-message {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #666;
+    text-align: center;
+    margin: 10px auto;
+    padding: 5px 10px;
+    border-radius: 15px;
+    float: none;
+    clear: both;
+    max-width: 80%;
+    font-size: 0.85rem;
+}
+
+.chat-input-container {
+    padding: 15px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #ddd;
+}
+
+#user-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 20px;
+    background-color: white;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+    transition: box-shadow var(--transition-speed);
+}
+
+#user-input:focus {
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.send-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    margin-right: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-speed);
+}
+
+.send-button:hover {
+    background-color: var(--accent-color);
+}
+
+.send-button i {
+    font-size: 1.2rem;
+}
+
+/* مؤشر الكتابة */
+.typing-indicator {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #e5e5e5;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    float: right;
+    clear: both;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.typing-indicator span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 2px;
+    background-color: #999;
+    border-radius: 50%;
+    animation: typingAnimation 1s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingAnimation {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Learning container styles */
+.learning-container {
+    padding: 15px;
+    background-color: #fffde7;
+    border-top: 1px solid #f9e8a0;
+    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+}
+
+.learning-container.hidden {
+    max-height: 0;
+    padding: 0 15px;
+    overflow: hidden;
+    opacity: 0;
+}
+
+#learning-prompt {
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #5f4c00;
+}
+
+#learning-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #f9e8a0;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+    margin-bottom: 10px;
+    transition: border-color var(--transition-speed);
+}
+
+#learning-input:focus {
+    border-color: var(--primary-color);
+}
+
+.learning-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.learning-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.learning-button.save {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.learning-button.save:hover {
+    background-color: var(--primary-color);
+}
+
+.learning-button.cancel {
+    background-color: #f1f1f1;
+    color: #666;
+}
+
+.learning-button.cancel:hover {
+    background-color: #e5e5e5;
+}
+
+footer {
+    text-align: center;
+    margin-top: auto;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Time display for messages */
+.message-time {
+    display: block;
+    font-size: 0.7rem;
+    opacity: 0.7;
+    text-align: left;
+    margin-top: 5px;
+}
+
+/* السمات المميزة للشخصية في الرسائل */
+.personality-indicator {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-right: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.personality-indicator.fun {
+    background-color: var(--personality-fun);
+    color: white;
+}
+
+.personality-indicator.serious {
+    background-color: var(--personality-serious);
+    color: white;
+}
+
+.personality-indicator.sarcastic {
+    background-color: var(--personality-sarcastic);
+    color: white;
+}
+
+.personality-indicator.wise {
+    background-color: var(--personality-wise);
+    color: black;
+}
+
+.personality-indicator.angry {
+    background-color: var(--personality-angry);
+    color: white;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .chat-container {
+        margin: 0;
+        height: 100vh;
+        border-radius: 0;
+    }
+    
+    .chat-header {
+        border-radius: 0;
+    }
+    
+    .message {
+        max-width: 85%;
+    }
+    
+    .personalities-container {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صالوت - بوت المحادثة العربي الذكي</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Add Google Font with Arabic support -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>صالوت <span class="subtitle">(Salot)</span></h1>
+            <p>بوت المحادثة العربي الذكي - يتعلم من محادثاتك</p>
+            
+            <!-- زر إظهار الإعدادات -->
+            <button id="settings-toggle" class="settings-toggle" title="الإعدادات">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+        
+        <!-- قسم الإعدادات -->
+        <div id="settings-panel" class="settings-panel hidden">
+            <h3>إعدادات البوت</h3>
+            
+            <div class="settings-section">
+                <h4>اختر شخصية البوت</h4>
+                <div class="personalities-container">
+                    {% for p in personalities %}
+                    <div class="personality-option {% if p == current_personality %}active{% endif %}" data-personality="{{ p }}">
+                        <span class="personality-emoji">
+                            {% if p == 'مرح' %}😄
+                            {% elif p == 'جدي' %}🧐
+                            {% elif p == 'ساخر' %}😏
+                            {% elif p == 'حكيم' %}🌟
+                            {% elif p == 'عصبي' %}😠
+                            {% else %}😊
+                            {% endif %}
+                        </span>
+                        <span class="personality-name">{{ p }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="settings-footer">
+                <button id="close-settings" class="close-settings">إغلاق</button>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chat-messages">
+            <!-- الرسائل ستضاف هنا ديناميكيًا -->
+        </div>
+        
+        <div class="chat-context" id="chat-context">
+            <!-- معلومات السياق ستظهر هنا -->
+        </div>
+        
+        <div class="chat-input-container">
+            <textarea id="user-input" placeholder="اكتب رسالتك هنا..." rows="2"></textarea>
+            <button id="send-button" class="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+        
+        <!-- حاوية وضع التعلم (مخفية مبدئيًا) -->
+        <div id="learning-container" class="learning-container hidden">
+            <p id="learning-prompt"></p>
+            <textarea id="learning-input" placeholder="علمني الإجابة المناسبة..." rows="2"></textarea>
+            <div class="learning-buttons">
+                <button id="save-learning" class="learning-button save">حفظ الإجابة</button>
+                <button id="cancel-learning" class="learning-button cancel">إلغاء</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>صالوت (Salot) - بوت المحادثة العربي الذكي</p>
+        <div class="current-personality" id="current-personality-indicator">
+            <span>الشخصية الحالية:</span>
+            <span id="current-personality-name">{{ current_personality }}</span>
+            <span id="current-personality-emoji">
+                {% if current_personality == 'مرح' %}😄
+                {% elif current_personality == 'جدي' %}🧐
+                {% elif current_personality == 'ساخر' %}😏
+                {% elif current_personality == 'حكيم' %}🌟
+                {% elif current_personality == 'عصبي' %}😠
+                {% else %}😊
+                {% endif %}
+            </span>
+        </div>
+    </footer>
+
+    <!-- تمرير المتغيرات إلى JavaScript -->
+    <script>
+        const GREETING = "{{ greeting|safe }}";
+        const PERSONALITIES = {{ personalities|tojson|safe }};
+        const CURRENT_PERSONALITY = "{{ current_personality }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
